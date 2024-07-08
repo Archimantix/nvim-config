@@ -33,6 +33,17 @@ install_dependencies() {
     fi
 }
 
+install_node_npm() {
+    log "Installing Node.js and npm..."
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - || error_exit "Failed to setup Node.js repository"
+    sudo apt-get install -y nodejs || error_exit "Failed to install Node.js"
+}
+
+install_prettier() {
+    log "Installing Prettier globally..."
+    sudo npm install -g prettier || error_exit "Failed to install Prettier"
+}
+
 build_neovim() {
     if command -v nvim &> /dev/null; then
         log "Neovim is already installed. Skipping cloning and building."
@@ -61,6 +72,8 @@ copy_config_files() {
 main() {
     log "Starting Neovim installation script"
     install_dependencies
+    install_node_npm
+    install_prettier
     build_neovim
     copy_config_files
     log "Neovim installation complete. Verify installation by running: nvim --version"
